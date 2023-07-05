@@ -14,10 +14,11 @@ import numpy as np
 import itertools #to calculate all subsets
 from copy import deepcopy
 from math import atan, pi, cos, sin, sqrt, ceil
+from psychopy.sound import Sound
 import time, random, sys, platform, os, gc, io #io is successor to StringIO
 #from EyelinkEyetrackerForPsychopySUPA3 import EyeLinkCoreGraphicsPsychopy, Tracker_EyeLink #Chris Fajou integration
 from helpersAOH import accelerateComputer, openMyStimWindow, calcCondsPerNumTargets, LCM, gcd
-eyetracking = True; eyetrackFileGetFromEyelinkMachine = True #very timeconsuming to get the file from the Windows machine over the ethernet cable, 
+eyetracking = False; eyetrackFileGetFromEyelinkMachine = False #True #very timeconsuming to get the file from the Windows machine over the ethernet cable, 
 #usually better to get the EDF file from the Eyelink machine by hand by rebooting into Windows and going to 
 
 quitFinder = False #Not sure this works
@@ -31,7 +32,7 @@ disable_gc = True
 subject='test'#'test'
 autoLogging = False
 demo = False
-autopilot=False
+autopilot=True #False
 if autopilot:  subject='auto'
 feedback=True
 exportImages= False #quits after one trial / output image
@@ -110,7 +111,7 @@ cueColor = np.array([1,1,1])
 widthPixRequested = 2560 #1440  800 #monitor width in pixels
 heightPixRequested = 1440  #900 600 #monitor height in pixels
 monitorwidth = 62; #38.5 #monitor width in centimeters
-viewdist = 60.; #cm
+viewdist = 65.; #cm
 bgColor = [-1,-1,-1] #black background
 monitorname = 'testMonitor' # 'mitsubishi' #in psychopy Monitors Center
 if exportImages:
