@@ -3,23 +3,24 @@ __author__ = """Alex "O." Holcombe, Wei-Ying Chen""" ## double-quotes will be si
 ###For set-up on a new machine, some variables to consider
 ###
 ### useClock
-### For set-up of a new experiment variant, variables to consider: 
+### For set-up of new experiment variant, variables to consider: 
 ### trialDurMin, trackVariableIntervMax
 ##############
 import psychopy.info
 from psychopy import sound, monitors, logging, visual, data, core
+useSound=True
 import psychopy.gui, psychopy.event
 import numpy as np
 import itertools #to calculate all subsets
 from copy import deepcopy
 from math import atan, pi, cos, sin, sqrt, ceil
-import time, sys, platform, os, gc, io #io is successor to StringIO
-#from EyelinkEyetrackerForPsychopySUPA3 import EyeLinkCoreGraphicsPsychopy, Tracker_EyeLink #Chris Fajou integration but try ioHub
+import time, random, sys, platform, os, gc, io #io is successor to StringIO
+#from EyelinkEyetrackerForPsychopySUPA3 import EyeLinkCoreGraphicsPsychopy, Tracker_EyeLink #Chris Fajou integration
 from helpersAOH import accelerateComputer, openMyStimWindow, calcCondsPerNumTargets, LCM, gcd
 eyetracking = True; eyetrackFileGetFromEyelinkMachine = True #very timeconsuming to get the file from the Windows machine over the ethernet cable, 
 #usually better to get the EDF file from the Eyelink machine by hand by rebooting into Windows and going to 
 
-quitFinder = False
+quitFinder = False #Not sure this works
 if quitFinder:
     applescript="\'tell application \"Finder\" to quit\'" #quit Finder.
     shellCmd = 'osascript -e '+applescript
@@ -53,7 +54,6 @@ has_retina_scrn = False
 import subprocess
 if subprocess.call("system_profiler SPDisplaysDataType | grep -i 'retina'", shell=True) == 0:
     has_retina_scrn = True #https://stackoverflow.com/questions/58349657/how-to-check-is-it-a-retina-display-in-python-or-terminal
-        
 # create a dialog from dictionary 
 infoFirst = { 'Autopilot':autopilot, 'Check refresh etc':True, 'Screen to use':scrn, 'Fullscreen (timing errors if not)': fullscr, 'Screen refresh rate': refreshRate }
 OK = psychopy.gui.DlgFromDict(dictionary=infoFirst, 
@@ -78,7 +78,7 @@ trackVariableIntervMax = 0.8 #Random interval that gets added to trackingExtraTi
 if demo:trialDurMin = 5;refreshRate = 60.; 
 tokenChosenEachRing= [-999]*numRings
 rampUpDur=0; #duration of speed ramp from stationary, during cue
-rampDownDur=0 #duration of speedramp down up to the end of the trial
+rampDownDur=0 #duration of speedramp down to the end of the trial
 
 def maxTrialDur():
     return( trialDurMin+trackingExtraTime+trackVariableIntervMax)
@@ -186,7 +186,6 @@ if myDlg.OK: #unpack information from dialogue box
          subject = name #change subject default name to what user entered
        trialsPerCondition = int( thisInfo[ dlgLabelsOrdered.index('trialsPerCondition') ] ) #convert string to integer
        print('trialsPerCondition=',trialsPerCondition)
-       logging.info('trialsPerCondition =',trialsPerCondition)
 else: 
    print('User cancelled from dialog box.')
    logging.flush()
@@ -202,8 +201,6 @@ fileName = dataDir+'/'+subject+ '_' + expname+timeAndDateStr
 if not demo and not exportImages:
     dataFile = open(fileName+'.txt', 'w')  # sys.stdout
     import shutil
-    #save a copy of the code as it was when that subject was run
-    print('sys.argv[0]= ',sys.argv[0])
     ok = shutil.copy2(sys.argv[0], fileName+'.py') # complete target filename given
     print("Result of attempt to copy = ", ok)
     #saveCodeCmd = 'cp \'' + sys.argv[0] + '\' '+ fileName + '.py'
@@ -226,6 +223,12 @@ print(msg, file=logF)
 print(msg)
 if msgWrongResolution != '':
     logging.error(msgWrongResolution)
+
+logging.info("computer platform="+sys.platform)
+#save a copy of the code as it was when that subject was run
+logging.info('File that generated this = sys.argv[0]= '+sys.argv[0])
+logging.info("has_retina_scrn="+str(has_retina_scrn))
+logging.info('trialsPerCondition =',trialsPerCondition)
 
 #Not a test - the final window opening
 myWin = openMyStimWindow(mon,widthPixRequested,heightPixRequested,bgColor,allowGUI,units,fullscr,scrn,waitBlank)
@@ -259,7 +262,7 @@ clickedRegion.setColor((0,1,-1)) #show in yellow
 
 landmarkDebug = visual.Circle(myWin, radius=2.2, edges=32, colorSpace='rgb',fillColor=(1,-1,1),autoLog=autoLogging) #to show clickable zones
 
-circlePostCue = visual.Circle(myWin, radius=2*radii[0], edges=32, colorSpace='rgb',fillColor=(-1,-1,-1),lineColor=(-.6,-.6,-.6),autoLog=autoLogging) #visual postcue
+circlePostCue = visual.Circle(myWin, radius=2*radii[0], edges=96, colorSpace='rgb',lineColor=(.8,.8,-.6),lineWidth=2,fillColor=None,autoLog=autoLogging) #visual postcue
 #referenceCircle allows visualisation of trajectory, mostly for debugging
 referenceCircle = visual.Circle(myWin, radius=radii[0], edges=32, colorSpace='rgb',lineColor=(-1,-1,1),autoLog=autoLogging) #visual postcue
 
@@ -288,34 +291,39 @@ NextRemindCountText = visual.TextStim(myWin,pos=(.1, -.5),colorSpace='rgb',color
 stimList = []
 # temporalfrequency limit test
 numObjsInRing =         [  2,                    8        ]
-speedsEachNumObjs =  [ [0.5,1.0,1.4,1.7], [0.5,1.0,1.4,1.7] ]     #dont want to go faster than 2 because of blur problem
-numTargets = np.array([3])  # np.array([1,2,3])
-leastCommonMultipleSubsets = int( calcCondsPerNumTargets(numRings,numTargets) )
-leastCommonMultipleTargetNums = int( LCM( numTargets ) )  #have to use this to choose whichToQuery.
-#for each subset, need to counterbalance which target is queried. Because each element occurs equally often, which one queried can be an independent factor. But need as many repetitions as largest number of target numbers.
-# 3 targets . 3 subsets maximum. Least common multiple is 3. 3 rings that could be post-cued. That means counterbalancing requires 3 x 3 x 3 = 27 trials. NO! doesn't work
-# But what do you do when 2 targets, which one do you pick in the 3 different situations? Can't counterbalance it evenly, because when draw 3rd situation, half of time should pick one and half the time the other. Therefore have to use least common multiple of all the possible set sizes. Unless you just want to throw away that possibility. But then have different number of trials in 2 targets than in 3 targets.
-#		-  Is that last sentence true? Because always seem to be running leastCommonMultipleSubsets/numSubsetsThis for each numTargets
-#	 Check counterbalancing of numObjectsInRing*speed*numTargets*ringToQuery.  Leaving out whichIsTarget which is a list of which of those numTargets is the target.
-print('leastCommonMultipleSubsets=',leastCommonMultipleSubsets, ' leastCommonMultipleTargetNums= ', leastCommonMultipleTargetNums)
-                
+speedsEachNumObjs =  [ [0.1, 0.5], [0.1, 0.5 ] ]   #[ [0.5,1.0,1.4,1.7], [0.5,1.0,1.4,1.7] ]     #dont want to go faster than 2 because of blur problem
+numTargets = np.array([2,3])  # np.array([1,2,3])
+
+queryEachRingEquallyOften = False
+#To query each ring equally often, the combinatorics are complicated because have different numbers of target conditions.
+if queryEachRingEquallyOften:
+    leastCommonMultipleSubsets = int( calcCondsPerNumTargets(numRings,numTargets) )
+    leastCommonMultipleTargetNums = int( LCM( numTargets ) )  #have to use this to choose ringToQuery.
+    #for each subset, need to counterbalance which target is queried. Because each element occurs equally often, which one queried can be an independent factor. But need as many repetitions as largest number of target numbers.
+    # 3 targets . 3 subsets maximum. Least common multiple is 3. 3 rings that could be post-cued. That means counterbalancing requires 3 x 3 x 3 = 27 trials. NO! doesn't work
+    # But what do you do when 2 targets, which one do you pick in the 3 different situations? Can't counterbalance it evenly, because when draw 3rd situation, half of time should pick one and half the time the other. Therefore have to use least common multiple of all the possible set sizes. Unless you just want to throw away that possibility. But then have different number of trials in 2 targets than in 3 targets.
+    #		-  Is that last sentence true? Because always seem to be running leastCommonMultipleSubsets/numSubsetsThis for each numTargets
+    #	 Check counterbalancing of numObjectsInRing*speed*numTargets*ringToQuery.  Leaving out whichIsTargetEachRing which is a list of which of those numTargets is the target.
+    print('leastCommonMultipleSubsets=',leastCommonMultipleSubsets, ' leastCommonMultipleTargetNums= ', leastCommonMultipleTargetNums)
+                    
 for numObjs in numObjsInRing: #set up experiment design
     idx = numObjsInRing.index(numObjs)
     speeds= speedsEachNumObjs[  idx   ]
     for speed in speeds:
         ringNums = np.arange(numRings)
         for nt in numTargets: #for each num targets condition,
-          #Need to query each ring equally often. In case of 3 rings and 2 targets, 3 choose 2 = 3 possible ring combinations
-          #If 3 concentric rings involved, have to consider 3 choose 2 targets, 3 choose 1 targets, have to have as many conditions as the maximum
-          subsetsThis = list(itertools.combinations(ringNums,nt)) #all subsets of length nt from the universe of ringNums
-          numSubsetsThis = len( subsetsThis );   print('numSubsetsThis=',numSubsetsThis)
-          repsNeeded = leastCommonMultipleSubsets / numSubsetsThis #that's the number of repetitions needed to make up for number of subsets of rings
-          for r in range( int(repsNeeded) ):  #for nt with largest number of subsets, need no repetitions
-              for s in subsetsThis:
-                  whichIsTarget = np.ones(numRings)*-999 #-999 is  value meaning no target in that ring. 1 will mean target in ring
+          if queryEachRingEquallyOften:
+            #In case of 3 rings and 2 targets, 3 choose 2 = 3 possible ring combinations
+            #If 3 concentric rings involved, have to consider 3 choose 2 targets, 3 choose 1 targets, have to have as many conditions as the maximum
+            subsetsThis = list(itertools.combinations(ringNums,nt)) #all subsets of length nt from the rings. E.g. if 3 rings and nt=2 targets
+            numSubsetsThis = len( subsetsThis );   print('numSubsetsThis=',numSubsetsThis, ' subsetsThis = ',subsetsThis)
+            repsNeeded = leastCommonMultipleSubsets / numSubsetsThis #that's the number of repetitions needed to make up for number of subsets of rings
+            for r in range( int(repsNeeded) ): #Balance different nt conditions. For nt with largest number of subsets, need no repetitions
+              for s in subsetsThis: #to equate ring usage, balance by going through all subsets. E.g. 3 rings with 2 targets is 1,2; 1,3; 2,3
+                  whichIsTargetEachRing = np.ones(numRings)*-999 #initialize to -999, meaning not a target in that ring.
                   for ring in s:
-                     whichIsTarget[ring] = np.random.randint(0,numObjs-1,size=1) #deprecated np.random.random_integers(0, numObjs-1, size=1) #1
-                  print('numTargets=',nt,' whichIsTarget=',whichIsTarget,' and that is one of ',numSubsetsThis,' possibilities and we are doing ',repsNeeded,'repetitions')
+                      whichIsTargetEachRing[ring] = np.random.randint(0,numObjs-1,size=1)
+                  print('numTargets=',nt,' whichIsTargetEachRing=',whichIsTargetEachRing,' and that is one of ',numSubsetsThis,' possibilities and we are doing ',repsNeeded,'repetitions')
                   for whichToQuery in range( leastCommonMultipleTargetNums ):  #for each subset, have to query one. This is dealed out to  the current subset by using modulus. It's assumed that this will result in equal total number of queried rings
                       whichSubsetEntry = whichToQuery % nt  #e.g. if nt=2 and whichToQuery can be 0,1,or2 then modulus result is 0,1,0. This implies that whichToQuery won't be totally counterbalanced with which subset, which is bad because
                                       #might give more resources to one that's queried more often. Therefore for whichToQuery need to use least common multiple.
@@ -323,8 +331,19 @@ for numObjs in numObjsInRing: #set up experiment design
                       for basicShape in ['circle']: #'diamond'
                         for initialDirRing0 in [-1,1]:
                                 stimList.append( {'basicShape':basicShape, 'numObjectsInRing':numObjs,'speed':speed,'initialDirRing0':initialDirRing0,
-                                        'numTargets':nt,'whichIsTarget':whichIsTarget,'ringToQuery':ringToQuery} )
-    #set up record of proportion correct in various conditions
+                                        'numTargets':nt,'whichIsTargetEachRing':whichIsTargetEachRing,'ringToQuery':ringToQuery} )
+          else: # not queryEachRingEquallyOften, because that requires too many trials for a quick session. Instead
+            #, will randomly at time of trial choose which rings have targets and which one querying.
+            whichIsTargetEachRing = np.ones(numRings)*-999 #initialize to -999, meaning not a target in that ring. '1' will indicate which is the target
+            #for t in range( int(nt) ):
+            #    whichIsTargetEachRing[t] = 0 #dummy value for now. Will set to random value when run trial.
+            ringToQuery = 999 #this is the signal to choose the ring randomly
+            for basicShape in ['circle']: #'diamond'
+                for initialDirRing0 in [-1,1]:
+                    stimList.append( {'basicShape':basicShape, 'numObjectsInRing':numObjs,'speed':speed,'initialDirRing0':initialDirRing0,
+                                'numTargets':nt,'whichIsTargetEachRing':whichIsTargetEachRing,'ringToQuery':ringToQuery} )            
+
+#set up record of proportion correct in various conditions
 trialSpeeds = list() #purely to allow report at end of how many trials got right at each speed
 for s in stimList: trialSpeeds.append( s['speed'] )
 uniqSpeeds = set(trialSpeeds) #reduce speedsUsed list to unique members, unordered set
@@ -438,7 +457,7 @@ def angleChangeThisFrame(speed,initialDirectionEachRing, numRing, thisFrameN, la
     angleMove = initialDirectionEachRing[numRing] * speed*2*pi*(thisFrameN-lastFrameN) / refreshRate
     return angleMove
 
-def  oneFrameOfStim(thisTrial,currFrame,clock,useClock,offsetXYeachRing,initialDirectionEachRing,currAngle,blobToCueEachRing,isReversed,reversalNumEachRing,ShowTrackCueFrames): 
+def oneFrameOfStim(thisTrial,currFrame,clock,useClock,offsetXYeachRing,initialDirectionEachRing,currAngle,blobToCueEachRing,isReversed,reversalNumEachRing,ShowTrackCueFrames): 
 #defining a function to draw each frame of stim. So can call second time for tracking task response phase
       global cueRing,ringRadial,ringRadialR, currentlyCuedBlob #makes python treat it as a local variable
       global angleIniEachRing, correctAnswers
@@ -513,7 +532,7 @@ def collectResponses(thisTrial,n,responses,responsesAutopilot,offsetXYeachRing,r
     timesRespPromptSoundPlayed=0
     if timesRespPromptSoundPlayed<1: #2
         if numRings > 1:
-            respPromptSound.play()
+            if useSound: respPromptSound.play()
         timesRespPromptSoundPlayed +=1
     #respText.draw()
 
@@ -544,7 +563,7 @@ def collectResponses(thisTrial,n,responses,responsesAutopilot,offsetXYeachRing,r
             circlePostCue.setPos( offsetXYeachRing[ thisTrial['ringToQuery'] ] )
             circlePostCue.setRadius( radii[ thisTrial['ringToQuery'] ] )
             circlePostCue.draw()
-                
+            
        for optionSet in range(optionSets):  #draw this group (ring) of options
           for ncheck in range( numOptionsEachSet[optionSet] ):  #draw each available to click on in this ring
                 angle =  (angleIniEachRing[optionSet]+currAngle[optionSet]) + ncheck*1.0/numOptionsEachSet[optionSet] *2.*pi
@@ -561,7 +580,7 @@ def collectResponses(thisTrial,n,responses,responsesAutopilot,offsetXYeachRing,r
                 gaussian.setColor(  colors_all[0], log=autoLogging )  #draw blob
                 gaussian.setPos([x,y]);  
                 gaussian.draw()
-                 
+            
        mouse1, mouse2, mouse3 = myMouse.getPressed()
        if mouse1 and lastClickState==0:  #only count this event if is a new click. Problem is that mouse clicks continue to be pressed for along time
             mouseX,mouseY = myMouse.getPos() 
@@ -641,7 +660,7 @@ print('Starting experiment of',trials.nTotal,'trials. Current trial is trial 0.'
 print('trialnum\tsubject\tbasicShape\tnumObjects\tspeed\tinitialDirRing0', end='\t', file=dataFile)
 print('orderCorrect\ttrialDurTotal\tnumTargets', end= '\t', file=dataFile) 
 for i in range(numRings):
-    print('whichIsTarget',i,  sep='', end='\t', file=dataFile)
+    print('whichIsTargetEachRing',i,  sep='', end='\t', file=dataFile)
 print('ringToQuery',end='\t',file=dataFile)
 for i in range(numRings):dataFile.write('Direction'+str(i)+'\t')
 for i in range(numRings):dataFile.write('respAdj'+str(i)+'\t')
@@ -666,7 +685,22 @@ randomInitialDirExceptRing0 = True
 oppositeInitialDirFirstTwoRings = True
 
 while trialNum < trials.nTotal and expStop==False:
-    accelerateComputer(1,process_priority, disable_gc) #speed up
+    accelerateComputer(1,process_priority, disable_gc) 
+
+    if not queryEachRingEquallyOften: #then need to randomly set ringToQuery and whichIsTargetEachRing
+        #To determine whichRingsHaveTargets, sample from 0,1,...,numRings by permuting that list
+        rings = list( range(numRings) )
+        random.shuffle(rings)
+        whichRingsHaveTargets = rings[ 0:thisTrial['numTargets'] ]
+        print("should be -999 at this point: thisTrial['whichIsTargetEachRing'] = ", thisTrial['whichIsTargetEachRing'])
+        #Randomly assign a target object for each ring that is meant to have a target
+        for r in whichRingsHaveTargets:
+            thisTrial['whichIsTargetEachRing'][r] = np.random.randint(0,thisTrial['numObjectsInRing'])
+        #Randomly pick ring to query. 
+        random.shuffle(whichRingsHaveTargets)
+        thisTrial['ringToQuery'] = whichRingsHaveTargets[0]
+        print("thisTrial['numTargets']=",thisTrial['numTargets'], " thisTrial['whichIsTargetEachRing'] = ", thisTrial['whichIsTargetEachRing'], " thisTrial['ringToQuery']",thisTrial['ringToQuery'])
+        
     colorRings=list();preDrawStimToGreasePipeline = list()
     isReversed= list([1]) * numRings #always takes values of -1 or 1
     reversalNumEachRing = list([0]) * numRings
@@ -693,11 +727,11 @@ while trialNum < trials.nTotal and expStop==False:
     reversalTimesEachRing = getReversalTimes()
     numObjects = thisTrial['numObjectsInRing']
     centerInMiddleOfSegment =360./numObjects/2.0
-    blobsToPreCue=thisTrial['whichIsTarget']
+    blobsToPreCue=thisTrial['whichIsTargetEachRing']
     core.wait(.1)
     myMouse.setVisible(False)      
     if eyetracking: 
-        tracker.startEyeTracking(trialNum,calibTrial=True,widthPix=widthPix,heightPix=heightPix) # tell eyetracker to start recording. Does this also somehow allow it to draw on the screen for the calibration?
+        tracker.startEyeTracking(trialNum,calibTrial=True,widthPix=widthPix,heightPix=heightPix) # tell eyetracker to start recording and calibrate. Does this allow it to draw on the screen for the calibration?
 
     fixatnPeriodFrames = int(   (np.random.rand(1)/2.+0.8)   *refreshRate)  #random interval between x and x+800ms
     for i in range(fixatnPeriodFrames):
@@ -716,7 +750,7 @@ while trialNum < trials.nTotal and expStop==False:
     for n in range(trialDurFrames): 
         offsetXYeachRing=[ [0,0],[0,0],[0,0] ]
         (angleIni,currAngle,isReversed,reversalNumEachRing) = \
-                oneFrameOfStim(thisTrial,n,stimClock,useClock,offsetXYeachRing,initialDirectionEachRing,currAngle,blobsToPreCue,isReversed,reversalNumEachRing,ShowTrackCueFrames) #da big function
+            oneFrameOfStim(thisTrial,n,stimClock,useClock,offsetXYeachRing,initialDirectionEachRing,currAngle,blobsToPreCue,isReversed,reversalNumEachRing,ShowTrackCueFrames) #da big function
 
         if exportImages:
             myWin.getMovieFrame(buffer='back') #for later saving
@@ -767,6 +801,7 @@ while trialNum < trials.nTotal and expStop==False:
                     #print >>logF, 'flankers also='+str( np.around( interframeIntervs[flankingAlso], 1) )
             #end timing check
     myMouse.setVisible(True)
+    
     #ansIter=(answer).reshape(1,-1)[0]; ln=len(ansIter) #in case it's two dimensions like in bindRadially
     #print 'answer=',answer,' or ', [colorNames[ int(ansIter[i]) ] for i in range( ln )], ' it is type ',type(answer), ' and shape ', np.shape(answer)  
     #shuffledAns = deepcopy(answer);  #just to use for options, to ensure they are in a different order
@@ -786,18 +821,19 @@ while trialNum < trials.nTotal and expStop==False:
         soundFileNum = thisTrial['ringToQuery']
     else: #eg if numRings==2:
         soundFileNum = thisTrial['ringToQuery']*2 #outer, not middle for ring==1
-        
-    respPromptSoundPathAndFile= os.path.join(soundDir, ringQuerySoundFileNames[ soundFileNum ])
-    respPromptSound = sound.Sound(respPromptSoundPathAndFile, secs=.2)
-    corrSoundPathAndFile= os.path.join(soundDir, 'Ding.wav')
-    corrSound = sound.Sound(corrSoundPathAndFile)
+    
+    if useSound:
+        respPromptSoundPathAndFile= os.path.join(soundDir, ringQuerySoundFileNames[ soundFileNum ])
+        respPromptSound = sound.Sound(respPromptSoundPathAndFile, secs=.2)
+        corrSoundPathAndFile= os.path.join(soundDir, 'Ding.wav')
+        corrSound = sound.Sound(corrSoundPathAndFile)
 
     postCueNumBlobsAway=-999 #doesn't apply to click tracking and non-tracking task
 
     responses = list();  responsesAutopilot = list()
     responses,responsesAutopilot,respondedEachToken,expStop = \
             collectResponses(thisTrial,n,responses,responsesAutopilot,offsetXYeachRing,respRadius,currAngle,expStop)  #collect responses!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#####
-    #print("responses=",responses,";respondedEachToken=",respondedEachToken,"expStop=",expStop) #debugOFF
+    #print("responses=",responses,";respondedEachToken=",respondedEachToken,"expStop=",expStop) 
     core.wait(.1)
     if exportImages:  #maybe catch one frame of response
         myWin.saveMovieFrames('exported/frame.png')    
@@ -809,11 +845,11 @@ while trialNum < trials.nTotal and expStop==False:
         for l in range(numRings):
                     if responses[l] !=[]: 
                        tokenChosenEachRing[l]=np.where(respondedEachToken[l])  [0][0] 
-                       respAdjs= initialDirectionEachRing[l]*isReversed[l]*(tokenChosenEachRing[l]-thisTrial['whichIsTarget'][l])
+                       respAdjs= initialDirectionEachRing[l]*isReversed[l]*(tokenChosenEachRing[l]-thisTrial['whichIsTargetEachRing'][l])
                        if respAdjs> numObjects/2. : respAdjs-= numObjects  #code in terms of closest way around. So if 9 objects and 8 ahead, code as -1
                        if respAdjs < -numObjects/2. : respAdjs += numObjects
                        respAdj.append(respAdjs)
-                       if tokenChosenEachRing[l]==thisTrial['whichIsTarget'][l]: 
+                       if tokenChosenEachRing[l]==thisTrial['whichIsTargetEachRing'][l]: 
                           sCorrects=1
                           sCorrect.append(sCorrects);
                           targetCorrect+=sCorrects
@@ -840,7 +876,7 @@ while trialNum < trials.nTotal and expStop==False:
     #header print('trialnum\tsubject\tbasicShape\tnumObjects\tspeed\tinitialDirRing0\tangleIni
     print(trialNum,subject,thisTrial['basicShape'],thisTrial['numObjectsInRing'],thisTrial['speed'],thisTrial['initialDirRing0'],sep='\t', end='\t', file=dataFile)
     print(orderCorrect,'\t',trialDurTotal,'\t',thisTrial['numTargets'],'\t', end=' ', file=dataFile) #override newline end
-    for i in range(numRings):  print( thisTrial['whichIsTarget'][i], end='\t', file=dataFile  )
+    for i in range(numRings):  print( thisTrial['whichIsTargetEachRing'][i], end='\t', file=dataFile  )
     print( thisTrial['ringToQuery'],end='\t',file=dataFile )
     for i in range(numRings):dataFile.write(str(round(initialDirectionEachRing[i],4))+'\t') 
     for i in range(numRings):dataFile.write(str(round(respAdj[i],4))+'\t') 
@@ -862,11 +898,13 @@ while trialNum < trials.nTotal and expStop==False:
         if orderCorrect==3  :correct=1
         else:correct=0
         if correct:
-            corrSound.play()
+            if useSound:
+                corrSound.play()
             #hiA = sound.Sound('A',octave=4, volume=0.9,  secs=.8); hiA.play()
         else: #incorrect
-            lowD = sound.Sound('E',octave=3, sampleRate=6000, secs=.8, volume=0.9)
-            lowD.play()
+            if useSound:
+                lowD = sound.Sound('E',octave=3, sampleRate=6000, secs=.8, volume=0.9)
+                lowD.play()
     trialNum+=1
     waitForKeyPressBetweenTrials = False
     if trialNum< trials.nTotal:
@@ -903,14 +941,20 @@ while trialNum < trials.nTotal and expStop==False:
     core.wait(.1); time.sleep(.1)
     #end trials loop  ###########################################################
 if expStop == True:
-    print('user aborted experiment on keypress with trials trialNum=', trialNum, file=logF)
-    print('user aborted experiment on keypress with trials trialNum=', trialNum)
+    logging.info('User aborted experiment by keypress with trialNum=' + str(trialNum))
+    print('User aborted experiment by keypress with trialNum=', trialNum)
     
 print('finishing at ',timeAndDateStr, file=logF)
-print('%corr order report= ', round( numTrialsOrderCorrect*1.0/trialNum*100., 2)  , '% of ',trialNum,' trials', end=' ')
-print('%corr each speed: ', end=' ')
-print(np.around( numRightWrongEachSpeedOrder[:,1] / ( numRightWrongEachSpeedOrder[:,0] + numRightWrongEachSpeedOrder[:,1]), 2))
-print('\t\t\t\tnum trials each speed =', numRightWrongEachSpeedOrder[:,0] + numRightWrongEachSpeedOrder[:,1])
+#print('%correct order = ', round( numTrialsOrderCorrect*1.0/trialNum*100., 2)  , '% of ',trialNum,' trials', end=' ')
+numTrialsEachSpeed = numRightWrongEachSpeedOrder[:,0] + numRightWrongEachSpeedOrder[:,1]
+allNonZeros = np.all( numTrialsEachSpeed )
+if allNonZeros: #Has to be all nonzeros otherwise will get divide by zero error
+    print('%correct each speed: ', end=' ')
+    print( np.around( numRightWrongEachSpeedOrder[:,1] / numTrialsEachSpeed, 2) )
+else:
+    print('Num correct each speed: ',end=' ')
+    print( np.around( numRightWrongEachSpeedOrder[:,1] , 2) )
+print('\t\t\t\tNum trials each speed =', numTrialsEachSpeed)
 logging.flush(); dataFile.close(); logF.close()
 
 if eyetracking:
