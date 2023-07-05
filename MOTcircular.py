@@ -16,7 +16,7 @@ from math import atan, pi, cos, sin, sqrt, ceil
 import time, sys, platform, os, gc, io #io is successor to StringIO
 #from EyelinkEyetrackerForPsychopySUPA3 import EyeLinkCoreGraphicsPsychopy, Tracker_EyeLink #Chris Fajou integration but try ioHub
 from helpersAOH import accelerateComputer, openMyStimWindow, calcCondsPerNumTargets, LCM, gcd
-eyetracking = False; eyetrackFileGetFromEyelinkMachine = False #very timeconsuming to get the file from the Windows machine over the ethernet cable, 
+eyetracking = True; eyetrackFileGetFromEyelinkMachine = True #very timeconsuming to get the file from the Windows machine over the ethernet cable, 
 #usually better to get the EDF file from the Eyelink machine by hand by rebooting into Windows and going to 
 
 quitFinder = False
@@ -47,7 +47,7 @@ radii=[2.5,9.5,15]   #Need to encode as array for those experiments wherein more
 respRadius=radii[0] #deg
 refreshRate= 110 *1.0;  #160 #set to the framerate of the monitor
 useClock = True #as opposed to using frame count, which assumes no frames are ever missed
-fullscr=1; scrn=0
+fullscr=1; scrn=1
 #Find out if screen may be Retina because of bug in psychopy for mouse coordinates (https://discourse.psychopy.org/t/mouse-coordinates-doubled-when-using-deg-units/11188/5)
 has_retina_scrn = False
 import subprocess
@@ -107,10 +107,10 @@ timeTillReversalMax = 1.5# 1.3 #2.9
 colors_all = np.array([[1,-1,-1]] * 20)  #colors of the blobs (all identical) in a ring. Need as many as max num objects in a ring
 cueColor = np.array([1,1,1])
 #monitor parameters
-widthPixRequested = 800 #1440  #monitor width in pixels
-heightPixRequested =600  #900 #monitor height in pixels
-monitorwidth = 30; #38.5 #monitor width in centimeters
-viewdist = 57.; #cm
+widthPixRequested = 2560 #1440  800 #monitor width in pixels
+heightPixRequested = 1440  #900 600 #monitor height in pixels
+monitorwidth = 62; #38.5 #monitor width in centimeters
+viewdist = 60.; #cm
 bgColor = [-1,-1,-1] #black background
 monitorname = 'testMonitor' # 'mitsubishi' #in psychopy Monitors Center
 if exportImages:
