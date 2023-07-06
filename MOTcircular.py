@@ -8,13 +8,12 @@ __author__ = """Alex "O." Holcombe, Wei-Ying Chen""" ## double-quotes will be si
 ##############
 import psychopy.info
 from psychopy import sound, monitors, logging, visual, data, core
-useSound=True
+useSound=False
 import psychopy.gui, psychopy.event
 import numpy as np
 import itertools #to calculate all subsets
 from copy import deepcopy
 from math import atan, pi, cos, sin, sqrt, ceil
-from psychopy.sound import Sound
 import time, random, sys, platform, os, gc, io #io is successor to StringIO
 #from EyelinkEyetrackerForPsychopySUPA3 import EyeLinkCoreGraphicsPsychopy, Tracker_EyeLink #Chris Fajou integration
 from helpersAOH import accelerateComputer, openMyStimWindow, calcCondsPerNumTargets, LCM, gcd
