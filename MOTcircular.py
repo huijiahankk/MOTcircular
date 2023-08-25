@@ -31,7 +31,7 @@ disable_gc = True
 subject='test'#'test'
 autoLogging = False
 demo = False
-autopilot=True
+autopilot=False
 if autopilot:  subject='auto'
 feedback=True
 exportImages= False #quits after one trial / output image
@@ -107,8 +107,8 @@ timeTillReversalMax = 1.5# 1.3 #2.9
 colors_all = np.array([[1,-1,-1]] * 20)  #colors of the blobs (all identical) in a ring. Need as many as max num objects in a ring
 cueColor = np.array([1,1,1])
 #monitor parameters
-widthPixRequested = 800 #1440  #monitor width in pixels   2880x1800
-heightPixRequested = 600  #900 #monitor height in pixels
+widthPixRequested = 800 #1440(mac)  800 #monitor width in pixels   2880x1800
+heightPixRequested = 600  #900(mac)  600 #monitor height in pixels
 monitorwidth = 30; #38.5 #monitor width in centimeters
 viewdist = 57.; #cm
 bgColor = [-1,-1,-1] #black background
@@ -290,8 +290,8 @@ NextRemindCountText = visual.TextStim(myWin,pos=(.1, -.5),colorSpace='rgb',color
 
 stimList = []
 # temporalfrequency limit test
-numObjsInRing =         [  2,                    8        ]
-speedsEachNumObjs =  [ [0.1, 0.5], [0.1, 0.5 ] ]   #[ [0.5,1.0,1.4,1.7], [0.5,1.0,1.4,1.7] ]     #dont want to go faster than 2 because of blur problem
+numObjsInRing =         [  3,                    8        ]
+speedsEachNumObjs =  [ [0.2, 0.3], [0.4, 0.5]  ]   # latest set [ [0.1, 0.5], [0.1, 0.5 ] ]   not known set: [ [0.5,1.0,1.4,1.7], [0.5,1.0,1.4,1.7] ]     #dont want to go faster than 2 because of blur problem
 numTargets = np.array([2,3])  # np.array([1,2,3])
 
 queryEachRingEquallyOften = False
