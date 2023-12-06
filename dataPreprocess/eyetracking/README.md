@@ -3,7 +3,9 @@ Eyetracking
 
 ## Communication from Psychopy to Eyelink
 
-Call functions in `EyelinkEyetrackerForPsychopySUPA3.py` to open communication with eyetracker, to generate the calibration display and calibrate, to close the eyetracker and retrieve the eyetracking file from the Eyelink machine
+Call functions in `EyelinkEyetrackerForPsychopySUPA3.py` to open communication with eyetracker, to generate the calibration display and calibrate, to close the eyetracker and retrieve the eyetracking file from the Eyelink machine. That SUPA3 file is not out of date and I'm updating it. 
+
+- See https://www.sr-research.com/support/thread-8713.html for explanation of location of Eyelink commands.
 
 ### Avoid going through EDF decoding
 
@@ -13,9 +15,14 @@ http://www.psychopy.org/api/hardware/pylink.html
 A simple example of getting individual data from the eyetracker and a gaze-contingent experiment is [here](https://github.com/ryancotterell/WilsonLab/blob/master/WilsonLab/pylink/eyeTracker.py)
 but preferably you'd use ioHub built in Psychopy eye_tracker/run.py which is accessed via Demos->Select Tracker
 
+We had that working in 2023 in [TessHons](https://github.com/alexholcombe/TessHons), but then the student said it wasn't working so she went with getting the EDF file manually off the host PC.
+
 ## Preprocessing of the Eyelink (EDF) file
 
-At long last we found [code for direct import into R](http://visionscience.com/pipermail/visionlist/2013/006286.html). However, I have not tested it (and would require code to collapse events of each trial) and it comes too late- I've already perfected the following workflow with the extra step of generating a Fixation Report in Eyelink Dataviewer.
+Eyelink now recommends [Pastukhov's R package](https://cran.r-project.org/package=eyelinkReader) for reading EDF files and also has a [longer list](https://www.sr-research.com/support/thread-7769.html). https://github.com/dahtah/eyelinker 
+I got that working now for TessHons and trying to get it working for MOT
+
+# OLD pre-eyelinkReader WORKFLOW
 
 Get the EDF file off the eyetracking machine (reboot eyetracking machine, select Windows), it's located in Eyelink:elcl:data and has the name of the participant.
 
