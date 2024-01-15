@@ -1,12 +1,17 @@
-
-# EyeLinkForPsychopyInSUPA.py
+# EyeLinkHolcombeLabHelpers.py
 #
-# Copyright (C) 2011 Wing (Wei-Ying Chen)  modified from pylink ATI and open source code
+# Started 2011 Wing (Wei-Ying Chen), modified from pylink ATI and open source code
 # Modified by Chris Fajou, pre-April 2015.
-# Provides a standard set of functions for using an eye tracker that allows experiment code to be simple and tracker agnostic.( For EyeLink1000)
+# Modified by Alex, November 2023
+# Provides functions for using an eye tracker that allows experiment code to be simple and For EyeLink1000
 
 import pylink
-import sys, os, gc
+try: #This only works if the code executing is one folder up, making eyetrackingCode a sub-folder
+    from eyetrackingCode import EyeLinkCoreGraphicsPsychoPy #imports from eyetrackingCode subfolder the file provided by Eyelink
+except Exception as e:
+    print("An exception occurred in EyelinkHolcombeLabHelpers.py:",str(e))
+    print('Could not import EyeLinkCoreGraphicsPsychoPyHolcombeLab.py (you need that file to be in the eyetrackingCode subdirectory, which needs an __init__.py file in it too)')
+import sys, os, gc, string
 from psychopy import visual, info, misc, monitors, event, core
 from numpy import array, hstack
  
@@ -20,90 +25,9 @@ GRAY = GREY = (128,128,128)
 BLACK = (0,0,0)
 spath = os.path.dirname(sys.argv[0])
 if len(spath) !=0: os.chdir(spath)
+use_retina = False
  
-class EyeLinkCoreGraphicsPsychopy(pylink.EyeLinkCustomDisplay):# Draw the Calibrating Display
-    def __init__(self, tracker, display, displaySize):
-        '''Initialize a Custom EyeLinkCoreGraphics for Psychopy 
-        tracker: the TRACKER() object
-        display: the Psychopy display window'''
-        pylink.EyeLinkCustomDisplay.__init__(self)
-        self.display = display
-        self.displaySize = displaySize
-        self.tracker = tracker
-        self.mouse = event.Mouse(visible=False)
-        self.target = visual.PatchStim(display, tex = None, mask = 'circle',units='pix', pos=(0,0),size=(6,6), color = [1,1,1] ) # calibrating dot
-        print("Finished initializing custom graphics")
- 
-    def setup_cal_display(self):
-        '''This function is called just before entering calibration or validation modes'''
-        self.display.flip()
-    def exit_cal_display(self):
-        '''This function is called just before exiting calibration/validation mode'''
-        self.display.flip()
-    def record_abort_hide(self):
-        '''This function is called if aborted'''
-        pass
-    def clear_cal_display(self):
-        '''Clear the calibration display'''
-        self.display.flip()
-    def erase_cal_target(self):
-        '''Erase the calibration or validation target drawn by previous call to draw_cal_target()'''
-        self.display.flip()
-    def draw_cal_target(self, x, y):
-        '''Draw calibration/validation target'''
-        self.target.setPos((x - 0.5*self.displaySize[0], 0.5*self.displaySize[1] - y))
-        self.target.draw()
-        self.display.flip()
-    def play_beep(self, beepid):
-        ''' Play a sound during calibration/drift correct.'''
-        pass
-    def draw_line(self, x1,y1,x2,y2,colorindex):
-        '''Draw a line to the display screen. This is used for drawing crosshairs'''
-        color = self.getColorFromIndex(colorindex)
-        line = visual.ShapeStim(self.display, vertices = ( (x1,y1),(x2,y2) ),lineWidth=1.0, lineColor=color )
-        line.draw()
-    def draw_losenge(self, x,y,width,height,colorindex):
-        '''Draw the cross hair at (x,y) '''
-        color = self.getColorFromIndex(colorindex)
-    def get_mouse_state(self):
-        '''Get the current mouse position and status'''
-        pos = self.mouse.getPos()
-        state = self.mouse.getPressed()[0]
-    def get_input_key(self):
-        '''Check the event buffer for special keypresses'''
-        k= event.getKeys([])
-    def exit_image_display(self):
-        '''Called to end camera display'''
-        self.display.flip()
-    def alert_printf(self,msg):
-        '''Print error messages.'''
-    def setup_image_display(self, width, height):
-        self.display.flip()
-    def image_title(self, text):
-        '''Draw title text at the top of the screen for camera setup'''
-        title = visual.TextStim(self.display, text = text, pos=(-10,0), units=cm)
-        title.draw()
-        self.display.flip()
-        title.draw()
-    def draw_image_line(self, width,line, totlines, buff):
-        '''Display image given pixel by pixel'''
-        pass 
-    def set_image_palette(self, r,g,b): 
-        '''Given a set of RGB colors, create a list of 24bit numbers representing the pallet.
-        I.e., RGB of (1,64,127) would be saved as 82047, or the number 00000001 01000000 011111111'''
-        self.imagebuffer = array.array('l')
-        self.clear_cal_display()
-        sz = len(r)
-        i =0
-        self.pal = []
-        while i < sz:
-            rf = int(b[i])
-            gf = int(g[i])
-            bf = int(r[i])
-            self.pal.append((rf<<16) |  (gf<<8) | (bf)) 
-            i = i+1        
- 
-class Tracker_EyeLink(): 
+class EyeLinkTrack_Holcombe(): 
     def __init__(self, win, clock, sj = "TEST", saccadeSensitivity = HIGH, calibrationType = 'HV9',calibrationTargetColor = WHITE,calibrationBgColor = BLACK, CalibrationSounds = False,screen=(1024,768)):
         '''win: psychopy visual window used for the experiment
           clock: psychopy time clock recording time for whole experiment
@@ -121,23 +45,78 @@ class Tracker_EyeLink():
             One of: BLACK, WHITE, GRAY
         calibrationSounds:
             True: enable feedback sounds when calibrating'''
-        self.edfFileName = str(sj)+".EDF"   # Subject name only can put 8 characters
-        print("Connecting to eyetracker.")
-        self.tracker = pylink.EyeLink()
-        self.timeCorrection = clock.getTime() - self.tracker.trackerTime()
-        print("Loading custom graphics")
-        #Initializes Experiment Graphics
-        genv = EyeLinkCoreGraphicsPsychopy(self.tracker, win, screen)
-        pylink.openGraphicsEx(genv)
-        # opendatafile
-        self.tracker.openDataFile(self.edfFileName)
+        self.edfFileName = str(sj)+".EDF"   # EDF filename on tracker machine can only be 8 characters!
+        # check if the filename is valid (length <= 8 & no special char)
+        allowed_char = string.ascii_letters + string.digits + '_' + '.'
+        if not all([c in allowed_char for c in self.edfFileName]):
+            print('ERROR: Invalid EDF filename characters in',self.edfFileName)
+        if len(self.edfFileName) > 8:
+            print('ERROR: EDF eyetracker machine filename should not exceed 8 characters, shortening it to first eight:',self.edfFileName[0:8])
+            self.edfFileName = self.edfFileName[0:8]
+        print("Eyetracker PC filename will be:",self.edfFileName)
         
+        print("Connecting to eyetracker.")
+        try:
+            self.tracker = pylink.EyeLink() #pylink.EyeLink('100.1.1.1')
+        except RuntimeError as err:
+            fix = '\nFailed to connect to eyetracker. Try checking ethernet connection and the IP address of the stimulus presentation PC!'
+            print(err, fix)
+            core.quit()
+                
+        self.timeCorrection = clock.getTime() - self.tracker.trackerTime()
+
+        print("Trying to enable Eyelink to draw calibration targets by creating or linking to graphics window")
+        oldSchoolWayOfEyelinkDrawingToScreen = False
+        if oldSchoolWayOfEyelinkDrawingToScreen:
+            # Instantiate a graphics environment (genv) just to draw calibration targets on experiment computer screen
+            genv = EyeLinkCoreGraphicsPsychoPy.EyeLinkCoreGraphicsPsychoPy(self.tracker, win)
+            #genv = EyeLinkCoreGraphicsPsychoPyHolcombeLab.EyeLinkCoreGraphicsPsychoPy(self.tracker, win)
+    
+            # Set background and foreground colors for calibration
+            foreground_color = (-1, -1, -1)
+            background_color = win.color
+            genv.setCalibrationColors(foreground_color, background_color)
+    
+            # The target could be a "circle" (default), a "picture", a "movie" clip,
+            # or a rotating "spiral".
+            genv.setTargetType('circle')
+            # Configure the size of the calibration target (in pixels)
+            genv.setTargetSize(24)
+    
+            #Set the calibration settings:
+            #pylink.setCalibrationColors(WHITE, BLACK) # Sets the calibration target and background color(foreground_color, background_color)
+            #AH November 2023 why does the below not work? It says the Psychopy object doesn't have a setCalibrationSounds function, but genv is what's used in eyeTrackerBasedOnPicture.py
+            # if CalibrationSounds:
+            #     genv.setCalibrationSounds("", "", "")
+            #     genv.setDriftCorrectSounds("", "off", "off")
+            # else:
+            #     genv.setCalibrationSounds("off", "off", "off")
+            #     genv.setDriftCorrectSounds("off", "off", "off")
+    
+            if use_retina:
+                genv.fixMacRetinaDisplay()
+            # Request Pylink to use the genv PsychoPy window we opened above for calibration
+            pylink.openGraphicsEx(genv)
+        else:
+            #More modern way of doing it? Tries to use existing graphics window opened by Psychopy
+            #If there is already an active Pygame window, Pylink will use it for calibration when we call pylink.openGraphics().
+            pylink.openGraphics()  
+            #pygame.display.set_mode((SCN_W, SCN_H), DOUBLEBUF | FULLSCREEN) #https://link.springer.com/chapter/10.1007/978-3-030-82635-2_4#Sec15
+
+        # open data file on eyetracking PC
+        self.tracker.openDataFile(self.edfFileName)
+
         #EyeLink Tracker Configuration
         pylink.flushGetkeyQueue();# Initializes the key queue used by getkey(). It may be called at any time to get rid any of old keys from the queue.
-        self.tracker.setOfflineMode();#Places EyeLink tracker in off-line (idle) mode. Wait till the tracker has finished the mode transition
+        self.tracker.setOfflineMode();#Recommended that first place EyeLink tracker in off-line (idle) mode.
         self.tracker.sendCommand("screen_pixel_coords =  0 0 %d %d"%( tuple(screen) ))
         self.tracker.setCalibrationType(calibrationType)
-        self.tracker.sendCommand("driftcorrect_cr_disable=OFF") #CF - OFF: turns on drift CORRECT; AUTO: Turns on drift CHECK; ON: Turns off both
+        self.tracker.sendCommand("driftcorrect_cr_disable=AUTO") #OFF: enables drift correction; AUTO: Turns on drift check (not correction); ON: Turns off both
+        #If driftcorrect_cr_disable is OFF, drift correction is enabled and one needs to set a landmark:
+        #self.tracker.sendCommand("online_dcorr_refposn = %d %d"%( tuple(screen/2) ))
+        #I'm not sure if the next line is necessary or not
+        #self.tracker.sendCommand("online_dcorr_button=ON") #ON Next the “Drift Corr” button is enabled onthe Recording Screen by turning it on. The drift correction will be by clicking the button. 
+
         #self.tracker.sendCommand("generate_default_targets = NO") 
         #self.tracker.sendCommand("calibration_targets = 512,384 512,417 512,351 402,384 622,384 402,417 622,417 402,351 622,351")
         #self.tracker.sendCommand("validation_targets = 512,384 512,417 512,351 402,384 622,384 402,417 622,417 402,351 622,351")
@@ -171,17 +150,12 @@ class Tracker_EyeLink():
         
         #self.tracker.setAcceptTargetFixationButton(1) # This programs a specific button for use in drift correction.
         
-          #Set the calibration settings:
-        #pylink.setCalibrationColors(WHITE, BLACK) # Sets the calibration target and background color(foreground_color, background_color)
-        if CalibrationSounds:
-            pylink.setCalibrationSounds("", "", "")
-            pylink.setDriftCorrectSounds("", "off", "off")
-        else:
-            pylink.setCalibrationSounds("off", "off", "off")
-            pylink.setDriftCorrectSounds("off", "off", "off")
-            
         print("Beginning tracker setup")
-        self.tracker.doTrackerSetup()
+        try:
+            self.tracker.doTrackerSetup() #This brings up the grey screen and tries to do the calibration, drawing calibration targets
+        except RuntimeError as err:
+            print('ERROR when trying to calibrate:', err)
+            self.tracker.exitCalibration()
  
     def sendMessage(self, msg):
         '''Record a message to the tracker'''
@@ -227,12 +201,17 @@ class Tracker_EyeLink():
             self.tracker.enableAutoCalibration()
             while True:
                 try:
-                    error = self.tracker.doDriftCorrect(widthPix/2,heightPix/2,1,1) # 0: the fixation target must be drawn by the user
+                    # Eyelink recommends drift-check at the beginning of each trial
+                    # the doDriftCorrect() function requires target position in integers
+                    # the last two arguments:
+                    # draw_target (1-default, 0-you draw the target then call doDriftCorrect)
+                    # allow_setup (1-press ESCAPE to recalibrate, 0-not allowed)                    
+                    error = self.tracker.doDriftCorrect(widthPix/2,heightPix/2,1,1) 
                     if error != 27:
                         #self.tracker.applyDriftCorrect
                         break
                     else:
-                        self.tracker.doTrackerSetup() #this does the actual calibration?
+                        self.tracker.doTrackerSetup() #this starts the actual calibration, bringing up the gray calibration screen
                 except:
                     print("Exception")
                     break
