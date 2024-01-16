@@ -15,13 +15,22 @@ import itertools #to calculate all subsets
 from copy import deepcopy
 from math import atan, pi, cos, sin, sqrt, ceil
 import time, random, sys, platform, os, gc, io #io is successor to StringIO
-#from EyelinkEyetrackerForPsychopySUPA3 import EyeLinkCoreGraphicsPsychopy, Tracker_EyeLink #Chris Fajou integration
+
+try:
+    from eyetrackingCode import EyelinkHolcombeLabHelpers #imports from eyetrackingCode subfolder the file provided by Eyelink
+except Exception as e:
+    print("An exception occurred: {str(e)}")
+    print('Could not import EyeLinkCoreGraphicsPsychoPyHolcombeLab.py (you need that file to be in the eyetrackingCode subdirectory, which needs an __init__.py file in it too)')
+try:
+    from eyetrackingCode import EyelinkHolcombeLabHelpers #imports from eyetrackingCode subfolder.
+    #EyeLinkTrack_Holcombe class originally created by Chris Fajou to combine lots of eyelink commands to create simpler functions
+except Exception as e:
+    print("An exception occurred:",str(e))
+    print('Could not import EyelinkHolcombeLabHelpers.py (you need that file to be in the eyetrackingCode subdirectory, which needs an __init__.py file in it too)')
+
 from helpersAOH import accelerateComputer, openMyStimWindow, calcCondsPerNumTargets, LCM, gcd
 eyetracking = True; eyetrackFileGetFromEyelinkMachine = True #very timeconsuming to get the file from the Windows machine over the ethernet cable, 
 #usually better to get the EDF file from the Eyelink machine by hand by rebooting into Windows and going to 
-
-# from psychopy import sound
-# mySound = sound.Sound(value='A', secs=0.8, sampleRate=44100, stereo=True, bufferSize=128)
 
 quitFinder = False #Not sure this works
 if quitFinder:
@@ -51,7 +60,7 @@ radii=[2.5,9.5,15]   #Need to encode as array for those experiments wherein more
 respRadius=radii[0] #deg
 refreshRate= 110 *1.0;  #160 #set to the framerate of the monitor
 useClock = True #as opposed to using frame count, which assumes no frames are ever missed
-fullscr=1; scrn=1
+fullscr=1; scrn=0
 #Find out if screen may be Retina because of bug in psychopy for mouse coordinates (https://discourse.psychopy.org/t/mouse-coordinates-doubled-when-using-deg-units/11188/5)
 has_retina_scrn = False
 import subprocess
@@ -110,8 +119,8 @@ timeTillReversalMax = 1.5# 1.3 #2.9
 colors_all = np.array([[1,-1,-1]] * 20)  #colors of the blobs (all identical) in a ring. Need as many as max num objects in a ring
 cueColor = np.array([1,1,1])
 #monitor parameters
-widthPixRequested = 800 #1440(mac)  800 #monitor width in pixels   2880x1800
-heightPixRequested = 600  #900(mac)  600 #monitor height in pixels
+widthPixRequested = 800 #1440  #monitor width in pixels
+heightPixRequested =600  #900 #monitor height in pixels
 monitorwidth = 30; #38.5 #monitor width in centimeters
 viewdist = 57.; #cm
 bgColor = [-1,-1,-1] #black background
@@ -293,8 +302,8 @@ NextRemindCountText = visual.TextStim(myWin,pos=(.1, -.5),colorSpace='rgb',color
 
 stimList = []
 # temporalfrequency limit test
-numObjsInRing =         [  3,                    8        ]
-speedsEachNumObjs =  [ [0.2, 0.3], [0.4, 0.5]  ]   # latest set [ [0.1, 0.5], [0.1, 0.5 ] ]   not known set: [ [0.5,1.0,1.4,1.7], [0.5,1.0,1.4,1.7] ]     #dont want to go faster than 2 because of blur problem
+numObjsInRing =         [  2,                    8        ]
+speedsEachNumObjs =  [ [0.1, 0.5], [0.1, 0.5 ] ]   #[ [0.5,1.0,1.4,1.7], [0.5,1.0,1.4,1.7] ]     #dont want to go faster than 2 because of blur problem
 numTargets = np.array([2,3])  # np.array([1,2,3])
 
 queryEachRingEquallyOften = False
@@ -680,8 +689,8 @@ trialDurTotal=0;
 ts = list();
 
 if eyetracking:
-    eyeMoveFile=('EyeTrack_'+subject+'_'+timeAndDateStr+'.EDF')
-    tracker=EyelinkHolcombeLabHelpers.EyelinkTrack_Holcombe(myWin,trialClock,subject,1, 'HV5',(255,255,255),(0,0,0),False,(widthPix,heightPix))
+    EDF_fname_local=('EyeTrack_'+subject+'_'+timeAndDateStr+'.EDF')
+    my_tracker = EyelinkHolcombeLabHelpers.EyeLinkTrack_Holcombe(myWin,trialClock,subject,1, 'HV5',(255,255,255),(0,0,0),False,(widthPix,heightPix))
 
 randomStartAngleEachRing = True
 randomInitialDirExceptRing0 = True
@@ -734,7 +743,7 @@ while trialNum < trials.nTotal and expStop==False:
     core.wait(.1)
     myMouse.setVisible(False)      
     if eyetracking: 
-        tracker.startEyeTracking(trialNum,calibTrial=True,widthPix=widthPix,heightPix=heightPix) # tell eyetracker to start recording
+        my_tracker.startEyeTracking(trialNum,calibTrial=True,widthPix=widthPix,heightPix=heightPix) # tell eyetracker to start recording
             #and calibrate. Does this allow it to draw on the screen for the calibration?
 
     fixatnPeriodFrames = int(   (np.random.rand(1)/2.+0.8)   *refreshRate)  #random interval between x and x+800ms
@@ -773,7 +782,7 @@ while trialNum < trials.nTotal and expStop==False:
     #End of trial stimulus loop!
     
     if eyetracking:
-        tracker.stopEyeTracking() #This seems to work immediately and cause the eyetracking PC to save the EDF file to its own drive
+        my_tracker.stopEyeTracking() #This seems to work immediately and cause the eyetracking PC to save the EDF file to its drive
     #clear mouse buffer in preparation for response, which may involve clicks
     psychopy.event.clearEvents(eventType='mouse')
 
@@ -829,7 +838,7 @@ while trialNum < trials.nTotal and expStop==False:
     if useSound:
         respPromptSoundPathAndFile= os.path.join(soundDir, ringQuerySoundFileNames[ soundFileNum ])
         respPromptSound = sound.Sound(respPromptSoundPathAndFile, secs=.2)
-        corrSoundPathAndFile= os.path.join(soundDir, 'Ding.wav')
+        corrSoundPathAndFile= os.path.join(soundDir, 'Ding44100Mono.wav')
         corrSound = sound.Sound(corrSoundPathAndFile)
 
     postCueNumBlobsAway=-999 #doesn't apply to click tracking and non-tracking task
@@ -907,8 +916,8 @@ while trialNum < trials.nTotal and expStop==False:
             #hiA = sound.Sound('A',octave=4, volume=0.9,  secs=.8); hiA.play()
         else: #incorrect
             if useSound:
-                lowD = sound.Sound('E',octave=3, sampleRate=6000, secs=.8, volume=0.9)
-                lowD.play()
+                lowSound = sound.Sound('E',octave=3, secs=.8, volume=0.9)
+                lowSound.play()
     trialNum+=1
     waitForKeyPressBetweenTrials = False
     if trialNum< trials.nTotal:
@@ -967,7 +976,7 @@ if eyetracking:
     eyetrackerFileWaitingText.setText('Waiting for eyetracking file from Eyelink computer. Do not abort eyetracking machine or file will not be saved?')
     eyetrackerFileWaitingText.draw()
     myWin.flip()
-    msg = tracker.closeConnectionToEyeTracker(eyeMoveFile) #this requests the data back and thus can be very time-consuming, like 20 min or more
+    msg = my_tracker.closeConnectionToEyeTracker(EDF_fname_local) #this requests the data back and thus can be very time-consuming, like 20 min or more
     print(msg); print(msg,file=logF) #""Eyelink connection closed successfully" or "Eyelink not available, not closed properly"
   else: 
     print('You will have to get the Eyelink EDF file off the eyetracking machine by hand')

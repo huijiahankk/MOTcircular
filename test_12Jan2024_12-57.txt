@@ -1,0 +1,1 @@
+trialnum	subject	basicShape	numObjects	speed	initialDirRing0	orderCorrect	trialDurTotal	numTargets	whichIsTargetEachRing0	whichIsTargetEachRing1	whichIsTargetEachRing2	ringToQuery	Direction0	Direction1	Direction2	respAdj0	respAdj1	respAdj2	rev0_0	rev0_1	rev0_2	rev0_3	rev1_0	rev1_1	rev1_2	rev1_3	rev2_0	rev2_1	rev2_2	rev2_3	timingBlips

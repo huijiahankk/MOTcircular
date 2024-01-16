@@ -1,0 +1,124 @@
+longFrameLimit=11.545 Recording trials where one or more interframe interval exceeded this figure 
+second window opening runInfo mean ms= 16.679930508578735
+13.0726 	INFO 	REFRESH RATE WAS NOT CHECKED
+13.0735 	INFO 	computer platform=win32
+13.0736 	INFO 	File that generated this = sys.argv[0]= C:\experiment\MOT\MOTcircular\MOTcircular.py
+13.0738 	INFO 	has_retina_scrn=False
+1.0000 	INFO 	trialsPerCondition =
+13.0771 	WARNING 	User requested fullscreen with size [800 600], but screen is actually [1920, 1080]. Using actual size
+14.4383 	EXP 	Created window1 = Window(allowGUI=False, allowStencil=False, autoLog=True, backendConf=UNKNOWN, backgroundFit=<method-wrapper '__getattribute__' of attributeSetter object at 0x000001A123913310>, backgroundImage=<method-wrapper '__getattribute__' of attributeSetter object at 0x000001A1239132B0>, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([-1, -1, -1]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x000001A123913100>, gamma=None, gammaErrorPolicy='raise', lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x000001A108966190>, multiSample=False, name='window1', numSamples=2, pos=(0, 0), screen=0, size=array([1920, 1080]), stencilBits=0, stereo=False, title='PsychoPy', units='deg', useFBO=False, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=False, winType='pyglet')
+14.4385 	EXP 	window1: mouseVisible = True
+14.4385 	EXP 	window1: backgroundImage = None
+14.4386 	EXP 	window1: backgroundFit = 'cover'
+14.4388 	EXP 	window1: mouseVisible = 'true'
+21.4303 	INFO 	#[ PsychoPy3 RuntimeInfoStart ]
+  #[[ PsychoPy ]] #---------
+    psychopyVersion: 2023.2.3
+    psychopyHaveExtRush: True
+  #[[ Experiment ]] #---------
+    experimentAuthVersion: None
+    experimentAuthor: Alex O. Holcombe, Wei-Ying Chen
+    experimentRunTime: 2024_01_12 12:36 (Year_Month_Day Hour:Min)
+    experimentRunTime.epoch: 1705034187
+    experimentScript: MOTcircular.py
+    experimentScript.digestSHA1: 071fdfa2a9a23f9a739000384396421848e30aa2
+    experimentScript.directory: C:\experiment\MOT\MOTcircular
+  #[[ System ]] #---------
+    systemHaveInternetAccess: True
+    systemHostName: DESKTOP-ONO2GH7
+    systemLocale: Chinese (Simplified)_China.936
+    systemMemFreeRAM: 1533.6171875
+    systemMemTotalRAM: 8058.859375
+    systemPlatform: windowsversion=sys.getwindowsversion(major=10, minor=0, build=19045, platform=2, service_pack='')
+    systemRebooted: [?]
+    systemSec.pythonSSL: True
+    systemTimeNumpySD1000000_sec: 0.0081
+    systemUser: Van
+    systemUserID: 1000
+    systemUserProcCmdPid: winlogon.exe supportassistagent.exe systemsettings.exe csrss.exe wmiprvse.exe dell.techhub.analytics.subagent.exe lsass.exe ddvrulesprocessor.exe btwrsupportservice.exe nissrv.exe dfssvc.exe btwdins.exe esif_uf.exe searchapp.exe sangforpromote.exe rundll32.exe wininit.exe 'system idle process' ecagent.exe bttray.exe mdlcsvc.exe cloud-drive-daemon.exe dwm.exe taskhostw.exe useroobebroker.exe msedge.exe securityhealthservice.exe runtimebroker.exe igfxcuiservice.exe presentationfontcache.exe sangforpwex.exe dell.techhub.instrumentation.subagent.exe onedrive.exe dllhost.exe platform_runtime_is5leyetracker5_service.exe deliveryservice.exe sangforpromoteservice.exe tobii.eyex.interaction.exe dell.techhub.exe trustedinstaller.exe dashost.exe spoolsv.exe lms.exe tobiivirtualdevice.exe wavessyssvc64.exe svchost.exe system dell.dcf.ua.bradbury.api.subagent.exe explorer.exe fontdrvhost.exe tobii.eyex.engine.exe wlanext.exe securityhealthsystray.exe vss-service-x64.exe officeclicktorun.exe textinputhost.exe msmpeng.exe btstackserver.exe cloud-drive-connect.exe rtkngui64.exe iastordatamgrsvc.exe dfs.common.agent.exe intelcphdcpsvc.exe ctfmon.exe services.exe igfxem.exe serviceshell.exe prsvc.exe dptf_helper.exe wavessvc64.exe registry ddvdatacollector.exe sgrmbroker.exe cloud-drive-ui.exe applicationframehost.exe musnotifyicon.exe yundetectservice.exe dell.techhub.instrumentation.userprocess.exe tobii.service.exe activateservice.exe dell.techhub.datamanager.subagent.exe iastoricon.exe sangforudprotectex.exe chsime.exe conhost.exe githubdesktop.exe isa.exe ddvcollectorsvcapi.exe pythonw.exe tobii.eyex.tray.exe shellexperiencehost.exe memcompression intelcphecisvc.exe wudfhost.exe sihost.exe jhi_service.exe tiworker.exe rstmwservice.exe audiodg.exe dell.techhub.diagnostics.subagent.exe ravbg64.exe smss.exe dccservice.exe rtkaudioservice64.exe startmenuexperiencehost.exe searchindexer.exe
+    systemUserProcCount: 231
+    systemUserProcFlagged: explorer.exe
+    systemUsersCount: False
+  #[[ Window ]] #---------
+    windowWinType: pyglet
+    windowWaitBlanking: False
+    windowUseNativeGamma: True
+    windowUnits: deg
+    windowSize_pix: [1920 1080]
+    windowScreen: 0
+    windowRgb: [-1 -1 -1]
+    windowRefreshTimeSD_ms: 0.276
+    windowRefreshTimeMedian_ms: 16.686
+    windowRefreshTimeAvg_ms: 16.680
+    windowRefreshThreshold_sec: 0.0200
+    windowRecordFrameIntervals: False
+    windowPos_pix: (0, 0)
+    windowMonitor.name: testMonitor
+    windowMonitor.getWidth_cm: 30.0
+    windowMonitor.getLinearizeMethod: 1
+    windowMonitor.getGammaGrid: [[ 0.  1.  1. nan nan nan]
+ [ 0.  1.  1. nan nan nan]
+ [ 0.  1.  1. nan nan nan]
+ [ 0.  1.  1. nan nan nan]]
+    windowMonitor.getDistance_cm: 57.0
+    windowMonitor.gammaInterpolator2: None
+    windowMonitor.gammaInterpolator: None
+    windowMonitor.currentCalibName: 2024_01_12 12:20
+    windowIsFullScr: 1
+    windowHaveShaders: True
+    windowAllowGUI: False
+  #[[ Python ]] #---------
+    pythonWxVersion: 4.1.1 msw (phoenix) wxWidgets 3.1.5
+    pythonVersion: 3.8.10
+    pythonScipyVersion: 1.10.1
+    pythonPygletVersion: 1.4.11
+    pythonPygameVersion: 2.1.0
+    pythonNumpyVersion: 1.24.4
+    pythonMatplotlibVersion: 3.4.3
+    pythonFullVersion: 3.8.10 (tags/v3.8.10:3d8993a, May  3 2021, 11:48:03) [MSC v.1928 64 bit (AMD64)]
+    pythonExecutable: C:\Program Files\PsychoPy\pythonw.exe
+  #[[ OpenGL ]] #---------
+    openGLmaxVerticesInVertexArray: 1048576
+    False: openGLext.GL_STEREO
+    True: openGLext.GL_EXT_framebuffer_object
+    True: openGLext.GL_ARB_vertex_shader
+    True: openGLext.GL_ARB_texture_non_power_of_two
+    True: openGLext.GL_ARB_texture_float
+    True: openGLext.GL_ARB_shader_objects
+    True: openGLext.GL_ARB_multitexture
+    True: openGLext.GL_ARB_fragment_program
+    openGLVersion: 4.6.0 - Build 26.20.100.7986
+    openGLVendor: Intel
+    openGLRenderingEngine: Intel(R) HD Graphics 520
+#[ PsychoPy3 RuntimeInfoEnd ]
+
+21.4311 	INFO 	gammaGrid=[[ 0.  1.  1. nan nan nan]
+ [ 0.  1.  1. nan nan nan]
+ [ 0.  1.  1. nan nan nan]
+ [ 0.  1.  1. nan nan nan]]
+21.4311 	INFO 	linearizeMethod=1
+21.4321 	EXP 	window1: mouseVisible = True
+21.4349 	EXP 	window1: mouseVisible = True
+21.4402 	EXP 	window1: mouseVisible = True
+21.4422 	EXP 	window1: mouseVisible = True
+21.4436 	EXP 	window1: mouseVisible = True
+21.4455 	EXP 	window1: mouseVisible = True
+21.4477 	EXP 	window1: mouseVisible = True
+21.4487 	EXP 	window1: mouseVisible = True
+21.4492 	EXP 	window1: mouseVisible = True
+21.4516 	EXP 	window1: mouseVisible = True
+21.4543 	EXP 	window1: mouseVisible = True
+21.4571 	EXP 	window1: mouseVisible = True
+21.5466 	EXP 	window1: mouseVisible = True
+21.5496 	EXP 	window1: mouseVisible = True
+21.5538 	EXP 	Created sequence: random, trialTypes=16, nReps=1, seed=None
+22.1132 	INFO 	starting exp with name: "TemporalFrequencyLimit" at 12Jan2024_12-36
+22.1133 	INFO 	numtrials=16, trialDurMin= 1 trackVariableIntervMax= 0.8refreshRate=110.0
+22.1133 	INFO 	rampUpDur=0 rampDownDur= 0 secs
+
+22.1133 	INFO 	task=track   respType=order
+22.1133 	INFO 	ring radii=[2.5, 9.5, 15]
+22.1160 	EXP 	New trial (rep=0, index=0): {'basicShape': 'circle', 'numObjectsInRing': 3, 'speed': 0.2, 'initialDirRing0': 1, 'numTargets': 2, 'whichIsTargetEachRing': array([-999., -999., -999.]), 'ringToQuery': 999}
+22.2182 	EXP 	window1: mouseVisible = False
+26.4046 	EXP 	window1: mouseVisible = True
+26.5638 	EXP 	window1: mouseVisible = True

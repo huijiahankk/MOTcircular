@@ -1,0 +1,185 @@
+longFrameLimit=11.545 Recording trials where one or more interframe interval exceeded this figure 
+second window opening runInfo mean ms= 16.68056949156226
+19.3097 	ERROR 	Median frames per second =60.0 BUT program assumes 110.0which is off by more than3%!!
+19.3101 	ERROR 	Instead of desired resolution of 800x600 pixels, screen apparently 1920x1080
+19.3102 	INFO 	computer platform=win32
+19.3102 	INFO 	File that generated this = sys.argv[0]= C:\experiment\MOT\MOTcircular\MOTcircular_josh.py
+19.3103 	INFO 	has_retina_scrn=False
+1.0000 	INFO 	trialsPerCondition =
+19.3179 	WARNING 	User requested fullscreen with size [800 600], but screen is actually [1920, 1080]. Using actual size
+20.6987 	EXP 	Created window1 = Window(allowGUI=False, allowStencil=False, autoLog=True, backendConf=UNKNOWN, backgroundFit=<method-wrapper '__getattribute__' of attributeSetter object at 0x000002360AE582E0>, backgroundImage=<method-wrapper '__getattribute__' of attributeSetter object at 0x000002360AE58280>, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([-1, -1, -1]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x000002360AE580D0>, gamma=None, gammaErrorPolicy='raise', lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x000002366FEA6190>, multiSample=False, name='window1', numSamples=2, pos=(0, 0), screen=0, size=array([1920, 1080]), stencilBits=0, stereo=False, title='PsychoPy', units='deg', useFBO=False, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=False, winType='pyglet')
+20.6990 	EXP 	window1: mouseVisible = True
+20.6991 	EXP 	window1: backgroundImage = None
+20.6991 	EXP 	window1: backgroundFit = 'cover'
+20.6992 	EXP 	window1: mouseVisible = 'true'
+25.1877 	INFO 	#[ PsychoPy3 RuntimeInfoStart ]
+  #[[ PsychoPy ]] #---------
+    psychopyVersion: 2023.2.3
+    psychopyHaveExtRush: True
+  #[[ Experiment ]] #---------
+    experimentAuthVersion: None
+    experimentAuthor: Alex O. Holcombe, Wei-Ying Chen
+    experimentRunTime: 2024_01_16 13:42 (Year_Month_Day Hour:Min)
+    experimentRunTime.epoch: 1705372974
+    experimentScript: MOTcircular_josh.py
+    experimentScript.digestSHA1: 1cab0eb0654dee2c009683454f505fe14012841b
+    experimentScript.directory: C:\experiment\MOT\MOTcircular
+  #[[ System ]] #---------
+    systemHaveInternetAccess: False (proxies not attempted)
+    systemHostName: DESKTOP-ONO2GH7
+    systemLocale: Chinese (Simplified)_China.936
+    systemMemFreeRAM: 2034.6484375
+    systemMemTotalRAM: 8058.859375
+    systemPlatform: windowsversion=sys.getwindowsversion(major=10, minor=0, build=19045, platform=2, service_pack='')
+    systemRebooted: [?]
+    systemSec.pythonSSL: True
+    systemTimeNumpySD1000000_sec: 0.0072
+    systemUser: Van
+    systemUserID: 1000
+    systemUserProcCmdPid: wlanext.exe sangforpromoteservice.exe conhost.exe ecagent.exe shellexperiencehost.exe svchost.exe wininit.exe applicationframehost.exe cloud-drive-ui.exe rtkngui64.exe cloud-drive-daemon.exe btstackserver.exe taskhostw.exe searchindexer.exe dashost.exe registry phoneexperiencehost.exe startmenuexperiencehost.exe securityhealthsystray.exe ravbg64.exe textinputhost.exe dell.dcf.ua.bradbury.api.subagent.exe dell.techhub.analytics.subagent.exe sangforpwex.exe pythonw.exe useroobebroker.exe memcompression tobii.service.exe searchapp.exe igfxcuiservice.exe intelcphecisvc.exe sihost.exe sgrmbroker.exe esif_uf.exe runtimebroker.exe isa.exe ddvrulesprocessor.exe dccservice.exe tobiivirtualdevice.exe dell.techhub.instrumentation.subagent.exe explorer.exe msedge.exe jhi_service.exe dell.techhub.instrumentation.userprocess.exe systemsettings.exe serviceshell.exe bttray.exe cloud-drive-connect.exe csrss.exe tobii.eyex.interaction.exe rtkaudioservice64.exe rstmwservice.exe dwm.exe btwdins.exe tobii.eyex.tray.exe presentationfontcache.exe rundll32.exe dptf_helper.exe tobii.eyex.engine.exe mdlcsvc.exe yundetectservice.exe tiworker.exe dell.techhub.datamanager.subagent.exe btwrsupportservice.exe wudfhost.exe sangforudprotectex.exe smss.exe iastoricon.exe lsass.exe fontdrvhost.exe system chsime.exe wavessyssvc64.exe igfxem.exe dell.techhub.diagnostics.subagent.exe wmiprvse.exe vss-service-x64.exe activateservice.exe msmpeng.exe winlogon.exe iastordatamgrsvc.exe intelcphdcpsvc.exe 'system idle process' ddvcollectorsvcapi.exe githubdesktop.exe dell.techhub.exe supportassistagent.exe platform_runtime_is5leyetracker5_service.exe prsvc.exe dllhost.exe securityhealthservice.exe lockapp.exe spoolsv.exe nissrv.exe deliveryservice.exe dfssvc.exe trustedinstaller.exe onedrive.exe services.exe dfs.common.agent.exe ctfmon.exe officeclicktorun.exe wavessvc64.exe ddvdatacollector.exe lms.exe
+    systemUserProcCount: 226
+    systemUserProcFlagged: explorer.exe
+    systemUsersCount: False
+  #[[ Window ]] #---------
+    windowWinType: pyglet
+    windowWaitBlanking: False
+    windowUseNativeGamma: True
+    windowUnits: deg
+    windowSize_pix: [1920 1080]
+    windowScreen: 0
+    windowRgb: [-1 -1 -1]
+    windowRefreshTimeSD_ms: 0.295
+    windowRefreshTimeMedian_ms: 16.686
+    windowRefreshTimeAvg_ms: 16.681
+    windowRefreshThreshold_sec: 0.0200
+    windowRecordFrameIntervals: False
+    windowPos_pix: (0, 0)
+    windowMonitor.name: testMonitor
+    windowMonitor.getWidth_cm: 30.0
+    windowMonitor.getLinearizeMethod: 1
+    windowMonitor.getGammaGrid: [[ 0.  1.  1. nan nan nan]
+ [ 0.  1.  1. nan nan nan]
+ [ 0.  1.  1. nan nan nan]
+ [ 0.  1.  1. nan nan nan]]
+    windowMonitor.getDistance_cm: 57.0
+    windowMonitor.gammaInterpolator2: None
+    windowMonitor.gammaInterpolator: None
+    windowMonitor.currentCalibName: 2024_01_12 12:20
+    windowIsFullScr: 1
+    windowHaveShaders: True
+    windowAllowGUI: False
+  #[[ Python ]] #---------
+    pythonWxVersion: 4.1.1 msw (phoenix) wxWidgets 3.1.5
+    pythonVersion: 3.8.10
+    pythonScipyVersion: 1.10.1
+    pythonPygletVersion: 1.4.11
+    pythonPygameVersion: 2.1.0
+    pythonNumpyVersion: 1.24.4
+    pythonMatplotlibVersion: 3.4.3
+    pythonFullVersion: 3.8.10 (tags/v3.8.10:3d8993a, May  3 2021, 11:48:03) [MSC v.1928 64 bit (AMD64)]
+    pythonExecutable: C:\Program Files\PsychoPy\pythonw.exe
+  #[[ OpenGL ]] #---------
+    openGLmaxVerticesInVertexArray: 1048576
+    False: openGLext.GL_STEREO
+    True: openGLext.GL_EXT_framebuffer_object
+    True: openGLext.GL_ARB_vertex_shader
+    True: openGLext.GL_ARB_texture_non_power_of_two
+    True: openGLext.GL_ARB_texture_float
+    True: openGLext.GL_ARB_shader_objects
+    True: openGLext.GL_ARB_multitexture
+    True: openGLext.GL_ARB_fragment_program
+    openGLVersion: 4.6.0 - Build 26.20.100.7986
+    openGLVendor: Intel
+    openGLRenderingEngine: Intel(R) HD Graphics 520
+#[ PsychoPy3 RuntimeInfoEnd ]
+
+25.1885 	INFO 	gammaGrid=[[ 0.  1.  1. nan nan nan]
+ [ 0.  1.  1. nan nan nan]
+ [ 0.  1.  1. nan nan nan]
+ [ 0.  1.  1. nan nan nan]]
+25.1885 	INFO 	linearizeMethod=1
+25.1894 	EXP 	window1: mouseVisible = True
+25.1923 	EXP 	window1: mouseVisible = True
+25.1969 	EXP 	window1: mouseVisible = True
+25.1980 	EXP 	window1: mouseVisible = True
+25.1990 	EXP 	window1: mouseVisible = True
+25.1998 	EXP 	window1: mouseVisible = True
+25.2019 	EXP 	window1: mouseVisible = True
+25.2039 	EXP 	window1: mouseVisible = True
+25.2048 	EXP 	window1: mouseVisible = True
+25.2075 	EXP 	window1: mouseVisible = True
+25.2101 	EXP 	window1: mouseVisible = True
+25.2127 	EXP 	window1: mouseVisible = True
+25.2949 	EXP 	window1: mouseVisible = True
+25.2981 	EXP 	window1: mouseVisible = True
+25.3019 	EXP 	Created sequence: random, trialTypes=16, nReps=1, seed=None
+25.8124 	INFO 	starting exp with name: "TemporalFrequencyLimit" at 16Jan2024_13-42
+25.8124 	INFO 	numtrials=16, trialDurMin= 1 trackVariableIntervMax= 0.8refreshRate=110.0
+25.8125 	INFO 	rampUpDur=0 rampDownDur= 0 secs
+
+25.8125 	INFO 	task=track   respType=order
+25.8125 	INFO 	ring radii=[2.5, 9.5, 15]
+25.8156 	EXP 	New trial (rep=0, index=0): {'basicShape': 'circle', 'numObjectsInRing': 2, 'speed': 0.1, 'initialDirRing0': -1, 'numTargets': 3, 'whichIsTargetEachRing': array([-999., -999., -999.]), 'ringToQuery': 999}
+25.9168 	EXP 	window1: mouseVisible = False
+30.0288 	EXP 	window1: mouseVisible = True
+30.1415 	EXP 	Sound  started
+34.3434 	DATA 	Mouse: Left button down, pos=(909,298)
+34.4442 	DATA 	Mouse:  Left button up, pos=(909,298)
+34.4601 	EXP 	Sound  started
+34.6114 	EXP 	New trial (rep=0, index=1): {'basicShape': 'circle', 'numObjectsInRing': 2, 'speed': 0.1, 'initialDirRing0': 1, 'numTargets': 3, 'whichIsTargetEachRing': array([0., 1., 0.]), 'ringToQuery': 999}
+34.9144 	EXP 	window1: mouseVisible = False
+39.4223 	EXP 	window1: mouseVisible = True
+39.4239 	EXP 	Sound  started
+44.6649 	DATA 	Mouse: Left button down, pos=(912,291)
+44.7770 	EXP 	Sound  started
+44.8163 	DATA 	Mouse:  Left button up, pos=(912,291)
+44.9284 	EXP 	New trial (rep=0, index=2): {'basicShape': 'circle', 'numObjectsInRing': 8, 'speed': 0.1, 'initialDirRing0': 1, 'numTargets': 2, 'whichIsTargetEachRing': array([-999., -999., -999.]), 'ringToQuery': 999}
+45.2316 	EXP 	window1: mouseVisible = False
+49.5731 	EXP 	window1: mouseVisible = True
+49.5749 	EXP 	Sound  started
+87.8614 	DATA 	Mouse: Left button down, pos=(961,794)
+87.9811 	EXP 	Sound  started
+87.9948 	DATA 	Mouse:  Left button up, pos=(961,794)
+88.1319 	EXP 	New trial (rep=0, index=3): {'basicShape': 'circle', 'numObjectsInRing': 8, 'speed': 0.5, 'initialDirRing0': 1, 'numTargets': 3, 'whichIsTargetEachRing': array([-999., -999., -999.]), 'ringToQuery': 999}
+88.4346 	EXP 	window1: mouseVisible = False
+92.9404 	EXP 	window1: mouseVisible = True
+92.9422 	EXP 	Sound  started
+94.1807 	DATA 	Mouse: Left button down, pos=(916,587)
+94.3021 	EXP 	Sound  started
+94.3379 	DATA 	Mouse:  Left button up, pos=(916,587)
+94.5492 	EXP 	New trial (rep=0, index=4): {'basicShape': 'circle', 'numObjectsInRing': 8, 'speed': 0.1, 'initialDirRing0': -1, 'numTargets': 3, 'whichIsTargetEachRing': array([-999., -999., -999.]), 'ringToQuery': 999}
+94.8516 	EXP 	window1: mouseVisible = False
+99.5338 	EXP 	window1: mouseVisible = True
+99.5373 	EXP 	Sound  started
+100.8778 	DATA 	Mouse: Left button down, pos=(985,600)
+100.9979 	DATA 	Mouse:  Left button up, pos=(984,601)
+101.0009 	EXP 	Sound  started
+101.1523 	EXP 	New trial (rep=0, index=5): {'basicShape': 'circle', 'numObjectsInRing': 2, 'speed': 0.1, 'initialDirRing0': -1, 'numTargets': 2, 'whichIsTargetEachRing': array([-999., -999., -999.]), 'ringToQuery': 999}
+101.4556 	EXP 	window1: mouseVisible = False
+105.4113 	EXP 	window1: mouseVisible = True
+105.4131 	EXP 	Sound  started
+107.0182 	DATA 	Mouse: Left button down, pos=(708,647)
+107.1281 	EXP 	Sound  started
+107.1637 	DATA 	Mouse:  Left button up, pos=(714,644)
+107.2800 	EXP 	New trial (rep=0, index=6): {'basicShape': 'circle', 'numObjectsInRing': 2, 'speed': 0.1, 'initialDirRing0': 1, 'numTargets': 2, 'whichIsTargetEachRing': array([   1.,    0., -999.]), 'ringToQuery': 999}
+107.5823 	EXP 	window1: mouseVisible = False
+111.9521 	EXP 	window1: mouseVisible = True
+111.9540 	EXP 	Sound  started
+112.9569 	DATA 	Mouse: Left button down, pos=(892,554)
+113.0666 	EXP 	Sound  started
+113.0696 	DATA 	Mouse:  Left button up, pos=(893,554)
+113.2184 	EXP 	New trial (rep=0, index=7): {'basicShape': 'circle', 'numObjectsInRing': 8, 'speed': 0.1, 'initialDirRing0': -1, 'numTargets': 2, 'whichIsTargetEachRing': array([   6.,    1., -999.]), 'ringToQuery': 999}
+113.5210 	EXP 	window1: mouseVisible = False
+117.7833 	EXP 	window1: mouseVisible = True
+117.7853 	EXP 	Sound  started
+119.3033 	DATA 	Mouse: Left button down, pos=(571,654)
+119.4257 	DATA 	Mouse:  Left button up, pos=(572,654)
+119.4262 	EXP 	Sound  started
+119.6609 	EXP 	New trial (rep=0, index=8): {'basicShape': 'circle', 'numObjectsInRing': 2, 'speed': 0.5, 'initialDirRing0': 1, 'numTargets': 3, 'whichIsTargetEachRing': array([-999., -999., -999.]), 'ringToQuery': 999}
+119.9642 	EXP 	window1: mouseVisible = False
+124.9170 	EXP 	window1: mouseVisible = True
+124.9188 	EXP 	Sound  started
+206.2638 	DATA 	Keypress: escape
+206.5219 	EXP 	New trial (rep=0, index=9): {'basicShape': 'circle', 'numObjectsInRing': 2, 'speed': 0.5, 'initialDirRing0': 1, 'numTargets': 2, 'whichIsTargetEachRing': array([-999., -999., -999.]), 'ringToQuery': 999}
+206.7225 	INFO 	User aborted experiment by keypress with trialNum=9
+206.8829 	EXP 	window1: mouseVisible = True
