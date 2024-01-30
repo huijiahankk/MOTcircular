@@ -29,7 +29,7 @@ except Exception as e:
     print('Could not import EyelinkHolcombeLabHelpers.py (you need that file to be in the eyetrackingCode subdirectory, which needs an __init__.py file in it too)')
 
 from helpersAOH import accelerateComputer, openMyStimWindow, calcCondsPerNumTargets, LCM, gcd
-eyetracking = False; eyetrackFileGetFromEyelinkMachine = False #very timeconsuming to get the file from the Windows machine over the ethernet cable, 
+eyetracking = True; eyetrackFileGetFromEyelinkMachine = True #very timeconsuming to get the file from the Windows machine over the ethernet cable, 
 #usually better to get the EDF file from the Eyelink machine by hand by rebooting into Windows and going to 
 
 quitFinder = False #Not sure this works
