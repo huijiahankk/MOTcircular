@@ -305,7 +305,7 @@ NextRemindCountText = visual.TextStim(myWin,pos=(.1, -.5),colorSpace='rgb',color
 stimList = []
 # temporalfrequency limit test
 numObjsInRing =         [  4,                    8        ]
-speedsEachNumObjs =  [ [0.3, 0.5], [0.7, 1.1 ] ]   #[ [0.5,1.0,1.4,1.7], [0.5,1.0,1.4,1.7] ]     #dont want to go faster than 2 because of blur problem
+speedsEachNumObjs =  [ [0.97, 0.7], [0.72, 0.53 ] ]   #[ [0.5,1.0,1.4,1.7], [0.5,1.0,1.4,1.7] ]     #dont want to go faster than 2 because of blur problem
 numTargets = np.array([2,3])  # np.array([1,2,3])
 
 queryEachRingEquallyOften = False
