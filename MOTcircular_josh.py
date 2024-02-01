@@ -17,10 +17,10 @@ from math import atan, pi, cos, sin, sqrt, ceil
 import time, random, sys, platform, os, gc, io #io is successor to StringIO
 
 try:
-    from eyetrackingCode import EyelinkHolcombeLabHelpers #imports from eyetrackingCode subfolder the file provided by Eyelink
+    from eyetrackingCode import EyeLinkCoreGraphicsPsychoPy#HolcombeLab #imports from eyetrackingCode subfolder the file provided by Eyelink
 except Exception as e:
-    print("An exception occurred: {str(e)}")
-    print('Could not import EyeLinkCoreGraphicsPsychoPyHolcombeLab.py (you need that file to be in the eyetrackingCode subdirectory, which needs an __init__.py file in it too)')
+    print("An exception occurred:", str(e))
+    print('Could not import EyeLinkCoreGraphicsPsychoPy.py (you need that file to be in the eyetrackingCode subdirectory, which needs an __init__.py file in it too)')
 try:
     from eyetrackingCode import EyelinkHolcombeLabHelpers #imports from eyetrackingCode subfolder.
     #EyeLinkTrack_Holcombe class originally created by Chris Fajou to combine lots of eyelink commands to create simpler functions
@@ -28,8 +28,10 @@ except Exception as e:
     print("An exception occurred:",str(e))
     print('Could not import EyelinkHolcombeLabHelpers.py (you need that file to be in the eyetrackingCode subdirectory, which needs an __init__.py file in it too)')
 
+print("After importing EyelinkHolcombeLabHelpers, it =", EyelinkHolcombeLabHelpers)
+
 from helpersAOH import accelerateComputer, openMyStimWindow, calcCondsPerNumTargets, LCM, gcd
-eyetracking = True; eyetrackFileGetFromEyelinkMachine = True #very timeconsuming to get the file from the Windows machine over the ethernet cable, 
+eyetracking = False; eyetrackFileGetFromEyelinkMachine = False #very timeconsuming to get the file from the Windows machine over the ethernet cable, 
 #usually better to get the EDF file from the Eyelink machine by hand by rebooting into Windows and going to 
 
 quitFinder = False #Not sure this works
@@ -55,10 +57,10 @@ respTypes=['order']; respType=respTypes[0]
 bindRadiallyRingToIdentify=1 #0 is inner, 1 is outer
 
 numRings=3
-radii=[2.5,9.5,15]   #Need to encode as array for those experiments wherein more than one ring presented 
+radii=[2,7.6,12]   #[2.5,9.5,15]  Need to encode as array for those experiments wherein more than one ring presented 
 
 respRadius=radii[0] #deg
-refreshRate= 110 *1.0;  #160 #set to the framerate of the monitor
+refreshRate= 100 *1.0;  #160 #set to the framerate of the monitor
 useClock = True #as opposed to using frame count, which assumes no frames are ever missed
 fullscr=1; scrn=0
 #Find out if screen may be Retina because of bug in psychopy for mouse coordinates (https://discourse.psychopy.org/t/mouse-coordinates-doubled-when-using-deg-units/11188/5)
@@ -120,8 +122,8 @@ colors_all = np.array([[1,-1,-1]] * 20)  #colors of the blobs (all identical) in
 cueColor = np.array([1,1,1])
 #monitor parameters
 widthPixRequested = 800 #1440  #monitor width in pixels
-heightPixRequested =600  #900 #monitor height in pixels
-monitorwidth = 30; #38.5 #monitor width in centimeters
+heightPixRequested = 600 #900 #monitor height in pixels
+monitorwidth = 38.5; #38.5 #monitor width in centimeters
 viewdist = 57.; #cm
 bgColor = [-1,-1,-1] #black background
 monitorname = 'testMonitor' # 'mitsubishi' #in psychopy Monitors Center
@@ -134,7 +136,7 @@ if demo:
     widthPixRequested = 800; heightPixRequested = 600
     monitorname='testMonitor'
     allowGUI = True
-    monitorwidth = 23#18.0
+    monitorwidth = 38.5#18.0
 
 mon = monitors.Monitor(monitorname,width=monitorwidth, distance=viewdist)#fetch the most recent calib for this monitor
 mon.setSizePix( (widthPixRequested,heightPixRequested) )
@@ -303,7 +305,7 @@ NextRemindCountText = visual.TextStim(myWin,pos=(.1, -.5),colorSpace='rgb',color
 stimList = []
 # temporalfrequency limit test
 numObjsInRing =         [  4,                    8        ]
-speedsEachNumObjs =  [ [0.2, 0.5], [0.3, 0.4 ] ]   #[ [0.5,1.0,1.4,1.7], [0.5,1.0,1.4,1.7] ]     #dont want to go faster than 2 because of blur problem
+speedsEachNumObjs =  [ [0.3, 0.5], [0.7, 1.1 ] ]   #[ [0.5,1.0,1.4,1.7], [0.5,1.0,1.4,1.7] ]     #dont want to go faster than 2 because of blur problem
 numTargets = np.array([2,3])  # np.array([1,2,3])
 
 queryEachRingEquallyOften = False
@@ -690,6 +692,7 @@ ts = list();
 
 if eyetracking:
     EDF_fname_local=('EyeTrack_'+subject+'_'+timeAndDateStr+'.EDF')
+    print("Ready to eyetrack with EyelinkHolcombeLabHelpers I think, EyelinkHolcombeLabHelpers=", EyelinkHolcombeLabHelpers)
     my_tracker = EyelinkHolcombeLabHelpers.EyeLinkTrack_Holcombe(myWin,trialClock,subject,1, 'HV5',(255,255,255),(0,0,0),False,(widthPix,heightPix))
 
 randomStartAngleEachRing = True

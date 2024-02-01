@@ -49,7 +49,7 @@ numRings=3
 radii=[2.5,9.5,15]   #Need to encode as array for those experiments wherein more than one ring presented 
 
 respRadius=radii[0] #deg
-refreshRate= 110 *1.0;  #160 #set to the framerate of the monitor
+refreshRate= 100 *1.0;  #160 #set to the framerate of the monitor
 useClock = True #as opposed to using frame count, which assumes no frames are ever missed
 fullscr=1; scrn=1
 #Find out if screen may be Retina because of bug in psychopy for mouse coordinates (https://discourse.psychopy.org/t/mouse-coordinates-doubled-when-using-deg-units/11188/5)
