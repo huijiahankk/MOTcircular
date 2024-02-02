@@ -57,7 +57,7 @@ respTypes=['order']; respType=respTypes[0]
 bindRadiallyRingToIdentify=1 #0 is inner, 1 is outer
 
 numRings=3
-radii=[2,7.6,12]   #[2.5,9.5,15]  Need to encode as array for those experiments wherein more than one ring presented 
+radii=[2.02,7.67,12.11]   #[2.5,9.5,15]  Need to encode as array for those experiments wherein more than one ring presented 
 
 respRadius=radii[0] #deg
 refreshRate= 100 *1.0;  #160 #set to the framerate of the monitor
@@ -124,7 +124,7 @@ cueColor = np.array([1,1,1])
 widthPixRequested = 800 #1440  #monitor width in pixels
 heightPixRequested = 600 #900 #monitor height in pixels
 monitorwidth = 38.5; #38.5 #monitor width in centimeters
-viewdist = 57.; #cm
+viewdist = 46.; #cm
 bgColor = [-1,-1,-1] #black background
 monitorname = 'testMonitor' # 'mitsubishi' #in psychopy Monitors Center
 if exportImages:
@@ -304,9 +304,13 @@ NextRemindCountText = visual.TextStim(myWin,pos=(.1, -.5),colorSpace='rgb',color
 
 stimList = []
 # temporalfrequency limit test
-numObjsInRing =         [  4,                    8        ]
-speedsEachNumObjs =  [ [0.97, 0.7], [0.72, 0.53 ] ]   #[ [0.5,1.0,1.4,1.7], [0.5,1.0,1.4,1.7] ]     #dont want to go faster than 2 because of blur problem
-numTargets = np.array([2,3])  # np.array([1,2,3])
+numTargets =                                [2,                 3]
+numObjsInRing =                         [  5,                   10        ]
+
+speedsEachNumTargetsNumObjects =   [ [ [0.5,1.0,1.4,1.7], [0.5,1.0,1.4,1.7] ],     #For the first numTargets condition
+                                     [ [0.2,0.5,0.7,1.0], [0.5,1.0,1.4,1.7] ]  ]  #For the second numTargets condition
+
+#dont go faster than 2 rps because of temporal blur/aliasing
 
 queryEachRingEquallyOften = False
 #To query each ring equally often, the combinatorics are complicated because have different numbers of target conditions.
@@ -321,12 +325,13 @@ if queryEachRingEquallyOften:
     print('leastCommonMultipleSubsets=',leastCommonMultipleSubsets, ' leastCommonMultipleTargetNums= ', leastCommonMultipleTargetNums)
                     
 for numObjs in numObjsInRing: #set up experiment design
-    idx = numObjsInRing.index(numObjs)
-    speeds= speedsEachNumObjs[  idx   ]
-    for speed in speeds:
+    for nt in numTargets: #for each num targets condition,
+      numObjectsIdx = numObjsInRing.index(numObjs)
+      numTargetsIdx = numTargets.index(nt)
+      speeds= speedsEachNumTargetsNumObjects[  numTargetsIdx ][ numObjectsIdx ]
+      for speed in speeds:
         ringNums = np.arange(numRings)
-        for nt in numTargets: #for each num targets condition,
-          if queryEachRingEquallyOften:
+        if queryEachRingEquallyOften:
             #In case of 3 rings and 2 targets, 3 choose 2 = 3 possible ring combinations
             #If 3 concentric rings involved, have to consider 3 choose 2 targets, 3 choose 1 targets, have to have as many conditions as the maximum
             subsetsThis = list(itertools.combinations(ringNums,nt)) #all subsets of length nt from the rings. E.g. if 3 rings and nt=2 targets
@@ -346,9 +351,9 @@ for numObjs in numObjsInRing: #set up experiment design
                         for initialDirRing0 in [-1,1]:
                                 stimList.append( {'basicShape':basicShape, 'numObjectsInRing':numObjs,'speed':speed,'initialDirRing0':initialDirRing0,
                                         'numTargets':nt,'whichIsTargetEachRing':whichIsTargetEachRing,'ringToQuery':ringToQuery} )
-          else: # not queryEachRingEquallyOften, because that requires too many trials for a quick session. Instead
+            else: # not queryEachRingEquallyOften, because that requires too many trials for a quick session. Instead
             #, will randomly at time of trial choose which rings have targets and which one querying.
-            whichIsTargetEachRing = np.ones(numRings)*-999 #initialize to -999, meaning not a target in that ring. '1' will indicate which is the target
+                whichIsTargetEachRing = np.ones(numRings)*-999 #initialize to -999, meaning not a target in that ring. '1' will indicate which is the target
             #for t in range( int(nt) ):
             #    whichIsTargetEachRing[t] = 0 #dummy value for now. Will set to random value when run trial.
             ringToQuery = 999 #this is the signal to choose the ring randomly
