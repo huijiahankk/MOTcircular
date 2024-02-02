@@ -763,7 +763,8 @@ while trialNum < trials.nTotal and expStop==False:
     if eyetracking: 
         my_tracker.startEyeTracking(trialNum,calibTrial=True,widthPix=widthPix,heightPix=heightPix) # tell eyetracker to start recording
             #and calibrate. Does this allow it to draw on the screen for the calibration?
-
+        pylink.closeGraphics()  #Don't allow eyelink to still be able to draw because as of 2023, we can't get it working to have both Psychopy and Eyelink routines to draw to the same graphics environment
+        
     fixatnPeriodFrames = int(   (np.random.rand(1)/2.+0.8)   *refreshRate)  #random interval between x and x+800ms
     for i in range(fixatnPeriodFrames):
         if i%2:
